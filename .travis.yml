@@ -17,7 +17,7 @@ before_install:
   - echo "USE mysql;\nUPDATE user SET password=PASSWORD('Password12!') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 env:
-  - GCLOUD_PROJECT=0 CXX=g++-4.8
+  - GCLOUD_PROJECT=0
 
 script:
   - ./bin/run-test.sh -c
@@ -26,5 +26,3 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
