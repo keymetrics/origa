@@ -16,9 +16,9 @@ while true; do
 done
 
 # Lint
-jshint . || exit 1
+#jshint . || exit 1
+#Install framework deps
 
-# Install framework deps
 for dir in test/hooks/fixtures/*/ ;
 do
   echo -en "travis_fold:start:npm_install_${dir}\\r" | tr / _
@@ -38,6 +38,9 @@ function run {
   ($C "$(npm bin)/_mocha" -- $* --timeout 4000 --R spec) || exit 1
 }
 
+# Custom tests
+mocha test/api/*
+
 # Run test/coverage
 run test test/hooks
 for test in test/standalone/test-*.js ;
@@ -49,13 +52,13 @@ do
 done
 
 # Conditionally publish coverage
-if [ "$cover" ]; then
-  istanbul report lcovonly
-  ./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info
-  rm -rf ./coverage
-fi
+# if [ "$cover" ]; then
+#   istanbul report lcovonly
+#   ./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info
+#   rm -rf ./coverage
+# fi
 
-# Run non-interference tests
-node test/non-interference/http-e2e.js || exit 1
-node test/non-interference/express-e2e.js || exit 1
-node test/non-interference/restify-e2e.js || exit 1
+# # Run non-interference tests
+# node test/non-interference/http-e2e.js || exit 1
+# node test/non-interference/express-e2e.js || exit 1
+# node test/non-interference/restify-e2e.js || exit 1

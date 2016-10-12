@@ -1,21 +1,16 @@
 {
-  "name": "@google/cloud-trace",
-  "version": "0.5.8",
-  "description": "Node.js Support for StackDriver Trace",
+  "name": "vxx",
+  "version": "0.5.9",
+  "description": "VXX",
   "main": "index.js",
-  "repository": "GoogleCloudPlatform/cloud-trace-nodejs",
+  "repository": "keymetrics/vxx",
   "scripts": {
-    "test": "./bin/run-test.sh",
+    "test": "GCLOUD_PROJECT=2 NODE_ENV=COGTEST ./bin/run-test.sh",
     "changelog": "./bin/run-changelog.sh",
     "coverage": "./bin/run-test.sh -c",
     "bump": "./bin/run-bump.sh",
     "closure": "./node_modules/.bin/closure-npc"
   },
-  "keywords": [
-    "google",
-    "tracing",
-    "profiling"
-  ],
   "author": "Google Inc.",
   "contributors": [
     {
@@ -50,8 +45,8 @@
     "tmp": "0.0.28"
   },
   "dependencies": {
-    "@google/cloud-diagnostics-common": "0.2.5",
     "continuation-local-storage": "^3.1.4",
+    "debug": "^2.2.0",
     "lodash.findindex": "^4.4.0",
     "lodash.isequal": "^4.0.0",
     "methods": "^1.1.1",

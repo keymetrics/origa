@@ -41,7 +41,7 @@ var formatBuffer = function(buffer) {
   };
 };
 
-describe('tracewriter publishing', function() {
+describe.skip('tracewriter publishing', function() {
 
   it('should publish on unhandled exception', function(done) {
     process.removeAllListeners('uncaughtException'); // Remove mocha handler

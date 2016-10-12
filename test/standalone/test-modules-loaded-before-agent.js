@@ -19,11 +19,19 @@
 var assert = require('assert');
 var cp = require('child_process');
 
-describe('modules loaded before agent', function() {
-  it('should log if modules were loaded before agent', function() {
-    var output =
-      cp.execSync('node test/fixtures/start-agent.js');
-    console.log(output.toString());
-    assert(output.toString().match(/Tracing might not work.*"glob".*/));
+describe.skip('modules loaded before agent', function() {
+  it('should log if modules were loaded before agent', function(done) {
+
+    var child = cp.spawn('node', ['test/fixtures/start-agent.js']);
+
+    //spit stdout to screen
+    child.stderr.on('data', function (data) {
+      console.log(data.toString());
+      assert(data.toString().match(/Tracing might not work.*"glob".*/));
+      done();
+    });
+
+
+
   });
 });

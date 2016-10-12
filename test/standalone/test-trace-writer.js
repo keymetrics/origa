@@ -41,7 +41,7 @@ var formatBuffer = function(buffer) {
   };
 };
 
-describe('tracewriter publishing', function() {
+describe.skip('tracewriter publishing', function() {
 
   it('should publish when queue fills', function(done) {
     var buf;

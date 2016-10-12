@@ -38,7 +38,7 @@ describe('express + mongo with trace options header + sampling', function() {
     });
     var server = app.listen(common.serverPort, function() {
       var headers = {};
-      headers['x-cloud-trace-context'] = '42/1729;o=1';
+      headers['x-km-trace-context'] = '42/1729;o=1';
       var doneCount = 0;
       var cb = function(res) {
         res.on('data', function() {});

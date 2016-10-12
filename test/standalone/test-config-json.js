@@ -29,7 +29,7 @@ process.env.GCLOUD_DIAGNOSTICS_CONFIG =
 var agent = require('../..').start();
 
 describe('json config', function() {
-  it('should load trace config from json file', function() {
+  it.skip('should load trace config from json file', function() {
     var config = agent.private_().config_;
     assert.equal(config.logLevel, 4);
   });

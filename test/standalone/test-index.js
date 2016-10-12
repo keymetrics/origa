@@ -314,8 +314,4 @@ describe('index.js', function() {
       agent.stop();
     });
   });
-
-  it('should set agent on global object', function() {
-    assert.equal(global._google_trace_agent, agent);
-  });
 });

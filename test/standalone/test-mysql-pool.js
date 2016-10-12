@@ -37,14 +37,14 @@ if (semver.satisfies(process.version, '>=4')) {
         }
       }, function (err) {
         assert(!err);
-        server.route({ 
-          method: 'GET', 
-          path: '/', 
+        server.route({
+          method: 'GET',
+          path: '/',
           handler: function (request, reply) {
             request.app.db.query('SELECT * FROM t', function(err, res) {
               return reply(common.serverRes);
-            }); 
-          } 
+            });
+          }
         });
         server.start(function(err) {
           assert(!err);

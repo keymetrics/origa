@@ -53,7 +53,7 @@ function sendRequests(options, expectedTraceCount, done) {
   var doneCount = 0;
   options.forEach(function(option) {
     var headers = {};
-    headers['x-cloud-trace-context'] = '42/1729;o=' + option;
+    headers['x-km-trace-context'] = '42/1729;o=' + option;
     http.get({port: common.serverPort, headers: headers}, function(res) {
       res.on('data', function() {});
       res.on('end', function() {
