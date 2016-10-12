@@ -22,23 +22,12 @@ This module provides StackDriver Trace support for Node.js applications. [StackD
 
 1. Install with [`npm`](https://www.npmjs.com) or add to your [`package.json`](https://docs.npmjs.com/files/package.json#dependencies).
 
-        npm install --save @google/cloud-trace
-
-2. Set the GCLOUD_PROJECT environment variable. You can find your Project ID in the [Google Cloud Developers Console][cloud-console], or by running the command `gcloud projects list`. You can ensure this environment variable is set at startup time by placing it in your startup script in `package.json`:
-
-        "scripts": {
-          "start": "GCLOUD_PROJECT=<YOUR_PROJECT_ID> node server.js",
-        },
+        npm install --save km-tracing
 
 3. Include and start the library at the *as the very first action in your application*:
 
-        require('@google/cloud-trace').start();
+        require('km-tracing').start();
 
-  If you use `--require` in your start up command, make sure that the trace agent is --required first.
-
-4. If you are running your application locally, or on a machine where you are using the [Google Cloud SDK][gcloud-sdk], make sure to log in with the application default credentials:
-
-        gcloud beta auth application-default login
 
 If you are running somewhere other than the Google Cloud Platform, see [running elsewhere](#running-elsewhere).
 
@@ -46,55 +35,9 @@ If you are running somewhere other than the Google Cloud Platform, see [running 
 
 See [the default configuration](config.js) for a list of possible configuration options. These options can be passed to the agent through the object argument to the start command shown above:
 
-        require('@google/cloud-trace').start({samplingRate: 500});
+        require('km-tracing').start({samplingRate: 500});
 
-Alternatively, you can provide configuration through a config file. This can be useful if you want to load our module using `--require` on the command line instead of editing your main script. You can start by copying the default config file and modifying it to suit your needs. The `GCLOUD_DIAGNOSTICS_CONFIG` environment variable should point to your configuration file.
-
-## Running on Google Cloud Platform
-
-There are three different services that can host Node.js application to Google Cloud Platform.
-
-### Google App Engine flexible environment
-
-If you are using [Google App Engine flexible environment](https://cloud.google.com/appengine/docs/flexible/), you do not have to do any additional configuration.
-
-### Google Compute Engine
-
-Your VM instances need to be created with the `https://www.googleapis.com/auth/trace.append` scope if created via the [gcloud](https://cloud.google.com/sdk) CLI or the Google Cloud Platform API, or with the 'Allow API access' checkbox selected if created via the [console][cloud-console] (see screenshot).
-
-![GCE API](doc/images/gce.png?raw=true)
-
-If you already have VMs that were created without API access and do not wish to recreate it, you can follow the instructions for using a service account under [running elsewhere](#running-elsewhere).
-
-### Google Container Engine
-
-Container Engine nodes need to also be created with the `https://www.googleapis.com/auth/trace.append` scope, which is configurable during cluster creation. Alternatively, you can follow the instructions for using a service account under [running elsewhere](#running-elsewhere). It's recommended that you store the service account credentials as [Kubernetes Secret](http://kubernetes.io/v1.1/docs/user-guide/secrets.html).
-
-## Running elsewhere
-
-If your application is running outside of Google Cloud Platform, such as locally, on-premise, or on another cloud provider, you can still use StackDriver Trace.
-
-1. You will need to specify your project ID when starting the trace agent.
-
-        GCLOUD_PROJECT=particular-future-12345 node myapp.js
-
-2. You need to provide service account credentials to your application. The recommended way is via [Application Default Credentials][app-default-credentials].
-
-  1. [Create a new JSON service account key][service-account].
-  2. Copy the key somewhere your application can access it. Be sure not to expose the key publicly.
-  3. Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the full path to the key. The debug agent will automatically look for this environment variable.
-
-3. Alternatively, if you are running your application on a development machine or test environment where you are using the [`gcloud` command line tools][gcloud-sdk], and are logged using `gcloud beta auth application-default login`, you already have sufficient credentials, and a service account key is not required.
-
-## Viewing your traces
-
-Run your application and start sending some requests towards your application. In about 30 seconds or so, you should see trace data gathered in the [STACKDRIVER -> Traces -> Trace List](https://console.cloud.google.com/traces/overview) in the console:
-
-![Trace List](doc/images/tracelist.png?raw=true)
-
-This is the trace list that shows a sampling of the incoming requests your application is receiving. You can click on a URI to drill down into the details. This will show you the RPCs made by your application and their associated latency:
-
-![Trace View](doc/images/traceview.png?raw=true)
+Alternatively, you can provide configuration through a config file. This can be useful if you want to load our module using `--require` on the command line instead of editing your main script. You can start by copying the default config file and modifying it to suit your needs.
 
 ## What gets traced
 
@@ -122,7 +65,7 @@ One configuration option of note is `enhancedDatabaseReporting`. Setting this op
 
 ## Disabling the trace agent
 
-The trace agent can be turned off by either setting the `GCLOUD_TRACE_DISABLE` environment variable or specifying `enabled: false` in your configuration file.
+The trace agent can be turned off by specifying `enabled: false` in your configuration file.
 
 ## Trace batching and sampling
 
@@ -139,7 +82,7 @@ For any of the web frameworks listed above (`express`, `hapi`, and `restify`), a
 The API is exposed by the `agent` returned by a call to `start`:
 
 ```javascript
-  var agent = require('@google/cloud-trace').start();
+  var agent = require('km-tracing').start();
 ```
 
 For child spans, you can either use the `startSpan` and `endSpan` API, or use the `runInSpan` function that uses a callback-style. For root spans, you must use `runInRootSpan`.

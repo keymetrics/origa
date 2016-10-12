@@ -33,7 +33,7 @@ var modulesLoadedBeforeTrace = [];
 
 for (var i = 0; i < filesLoadedBeforeTrace.length; i++) {
   var moduleName = util.packageNameFromPath(filesLoadedBeforeTrace[i]);
-  if (moduleName && moduleName !== '@google/cloud-trace' &&
+  if (moduleName && moduleName !== 'km-tracing' &&
       modulesLoadedBeforeTrace.indexOf(moduleName) === -1) {
     modulesLoadedBeforeTrace.push(moduleName);
   }

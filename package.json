@@ -1,5 +1,5 @@
 {
-  "name": "@google/cloud-trace",
+  "name": "km-tracing",
   "version": "0.5.8",
   "description": "Node.js Support for StackDriver Trace",
   "main": "index.js",
