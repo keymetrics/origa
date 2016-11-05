@@ -1,43 +1,22 @@
-# StackDriver Trace for Node.js
-
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url]
-[![Dependency Status][david-image]][david-url]
-[![devDependency Status][david-dev-image]][david-dev-url]
-
-> *This module is experimental, and should be used by early adopters. This module uses APIs that may be undocumented and subject to change without notice.*
-
-This module provides StackDriver Trace support for Node.js applications. [StackDriver Trace](https://cloud.google.com/cloud-trace/) is a feature of [Google Cloud Platform](https://cloud.google.com/) that collects latency data (traces) from your applications and displays it in near real-time in the [Google Cloud Console][cloud-console].
-
-![StackDriver Trace Overview](doc/images/cloud-trace-overview-page.png)
+# Trace Driver
 
 ## Prerequisites
 
 1. Your application will need to be using Node.js version 0.12 or greater.
-1. You will need a project in the [Google Developers Console][cloud-console]. Your application can run anywhere, but the trace data is associated with a particular project.
-1. [Enable the Trace API](https://console.cloud.google.com/flows/enableapi?apiid=cloudtrace) for your project.
 
-## Installation
+## Usage
 
-1. Install with [`npm`](https://www.npmjs.com) or add to your [`package.json`](https://docs.npmjs.com/files/package.json#dependencies).
+        var agent = require('km-tracing').start();
 
-        npm install --save km-tracing
-
-3. Include and start the library at the *as the very first action in your application*:
-
-        require('km-tracing').start();
-
-
-If you are running somewhere other than the Google Cloud Platform, see [running elsewhere](#running-elsewhere).
+        agent.getBus().on('transaction', function(transaction) {
+          console.log(transaction);
+        });
 
 ## Configuration
 
 See [the default configuration](config.js) for a list of possible configuration options. These options can be passed to the agent through the object argument to the start command shown above:
 
         require('km-tracing').start({samplingRate: 500});
-
-Alternatively, you can provide configuration through a config file. This can be useful if you want to load our module using `--require` on the command line instead of editing your main script. You can start by copying the default config file and modifying it to suit your needs.
 
 ## What gets traced
 
@@ -55,8 +34,6 @@ The agent will also automatic trace of the following kinds of RPCs:
 
 You can use the [Custom Tracing API](#custom-tracing-api) to trace other processes in your application.
 
-We are working on expanding the types of frameworks and services we can do automatic tracing for. We are also interested in hearing your feedback on what other frameworks, or versions, you would like to see supported. This would help us prioritize support going forward. If you want support for a particular framework or RPC, please file a bug or +1 an existing bug.
-
 ## Advanced trace configuration
 
 The trace agent can be configured by passing a configurations object to the agent `start` method. This configuration option accepts all values in the [default configuration](config.js).
@@ -66,12 +43,6 @@ One configuration option of note is `enhancedDatabaseReporting`. Setting this op
 ## Disabling the trace agent
 
 The trace agent can be turned off by specifying `enabled: false` in your configuration file.
-
-## Trace batching and sampling
-
-The aggregation of trace spans before publishing can be configured using the `flushDelaySeconds` and `bufferSize` [options](config.js). The spans recorded for each incoming requests are placed in a buffer after the request has completed. Spans will be published to the UI in batch when the spans from `bufferSize` requests have been queued in the buffer or after `flushDelaySeconds` have passed since the last publish, whichever comes first.
-
-The trace configuration additionally exposes the `samplingRate` option which sets an upper bound on the number of traced requests captured per second. Some Google Cloud environments may override this sampling policy.
 
 ## Custom Tracing API
 
@@ -159,18 +130,3 @@ You can add additional labels using `agent.addTransactionLabel`:
 ## Licensing
 
 * See [LICENSE](LICENSE)
-
-[cloud-console]: https://console.cloud.google.com
-[gcloud-sdk]: https://cloud.google.com/sdk/gcloud/
-[app-default-credentials]: https://developers.google.com/identity/protocols/application-default-credentials
-[service-account]: https://console.developers.google.com/apis/credentials/serviceaccountkey
-[npm-image]: https://badge.fury.io/js/%40google%2Fcloud-trace.svg
-[npm-url]: https://npmjs.org/package/@google/cloud-trace
-[travis-image]: https://travis-ci.org/GoogleCloudPlatform/cloud-trace-nodejs.svg?branch=master
-[travis-url]: https://travis-ci.org/GoogleCloudPlatform/cloud-trace-nodejs
-[coveralls-image]: https://coveralls.io/repos/GoogleCloudPlatform/cloud-trace-nodejs/badge.svg?branch=master&service=github
-[coveralls-url]: https://coveralls.io/github/GoogleCloudPlatform/cloud-trace-nodejs?branch=master
-[david-image]: https://david-dm.org/GoogleCloudPlatform/cloud-trace-nodejs.svg
-[david-url]: https://david-dm.org/GoogleCloudPlatform/cloud-trace-nodejs
-[david-dev-image]: https://david-dm.org/GoogleCloudPlatform/cloud-trace-nodejs/dev-status.svg
-[david-dev-url]: https://david-dm.org/GoogleCloudPlatform/cloud-trace-nodejs#info=devDependencies

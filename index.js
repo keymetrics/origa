@@ -23,7 +23,7 @@ var filesLoadedBeforeTrace = Object.keys(require.cache);
 require('continuation-local-storage');
 
 var SpanData = require('./lib/span-data.js');
-var Logger = require('./logger.js');
+var Logger = require('./lib/logger.js');
 var semver = require('semver');
 var constants = require('./lib/constants.js');
 var path = require('path');
@@ -109,6 +109,9 @@ var publicAgent = {
     return agent.addTransactionLabel(key, value);
   },
 
+  getBus : function() {
+    return agent.traceWriter;
+  },
   start: function(projectConfig) {
     if (this.isActive()) { // already started.
       agent.logger.warn('Calling start on already started agent.' +
@@ -142,6 +145,7 @@ var publicAgent = {
     }
 
     agent = require('./lib/trace-agent.js').get(config, logger);
+
     return this; // for chaining
   },
 
