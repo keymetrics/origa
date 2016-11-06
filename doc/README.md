@@ -6,17 +6,31 @@
 
 ## Usage
 
-        var agent = require('km-tracing').start();
+```javascript
+var agent = require('km-tracing').start();
 
-        agent.getBus().on('transaction', function(transaction) {
-          console.log(transaction);
-        });
+agent.getBus().on('transaction', function(transaction) {
+  console.log(transaction);
+});
+```
+
+## Test
+
+```bash
+$ npm test
+```
 
 ## Configuration
 
 See [the default configuration](config.js) for a list of possible configuration options. These options can be passed to the agent through the object argument to the start command shown above:
 
-        require('km-tracing').start({samplingRate: 500});
+```
+require('km-tracing').start({
+  excludedHooks: [],
+  stackTraceLimit: 0,
+  ignoreUrls: [ '/_ah/health' ]
+});
+```
 
 ## What gets traced
 

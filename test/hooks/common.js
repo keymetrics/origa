@@ -15,10 +15,10 @@
  */
 'use strict';
 
-if (!process.env.GCLOUD_PROJECT) {
-  console.log('The GCLOUD_PROJECT environment variable must be set.');
-  process.exit(1);
-}
+// if (!process.env.GCLOUD_PROJECT) {
+//   console.log('The GCLOUD_PROJECT environment variable must be set.');
+//   process.exit(1);
+// }
 
 var config = { enhancedDatabaseReporting: true, samplingRate: 0 };
 var agent = require('../..').start(config).private_();
@@ -39,15 +39,22 @@ var SERVER_RES = '1729';
 var SERVER_KEY = fs.readFileSync(path.join(__dirname, 'fixtures', 'key.pem'));
 var SERVER_CERT = fs.readFileSync(path.join(__dirname, 'fixtures', 'cert.pem'));
 
+
+var _buffer = [];
+
 /**
  * Cleans the tracer state between test runs.
  */
 function cleanTraces() {
-  agent.traceWriter.buffer_ = [];
+  _buffer = [];
 }
 
+agent.traceWriter.on('transaction', function(transaction) {
+  _buffer.push(transaction);
+});
+
 function getTraces() {
-  return agent.traceWriter.buffer_.map(JSON.parse);
+  return _buffer;
 }
 
 function getMatchingSpan(predicate) {
@@ -59,7 +66,7 @@ function getMatchingSpan(predicate) {
 
 function getMatchingSpans(predicate) {
   var list = [];
-  getTraces().forEach(function(trace) {
+  _buffer.forEach(function(trace) {
     trace.spans.forEach(function(span) {
       if (predicate(span)) {
         list.push(span);

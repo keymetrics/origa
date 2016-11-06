@@ -16,10 +16,10 @@
 
 'use strict';
 
-if (!process.env.GCLOUD_PROJECT) {
-  console.log('The GCLOUD_PROJECT environment variable must be set.');
-  process.exit(1);
-}
+// if (!process.env.GCLOUD_PROJECT) {
+//   console.log('The GCLOUD_PROJECT environment variable must be set.');
+//   process.exit(1);
+// }
 
 var agent = require('..').start({ samplingRate: 0 }).private_();
 var TraceLabels = require('../lib/trace-labels.js');
