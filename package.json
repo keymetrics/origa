@@ -1,7 +1,7 @@
 {
   "name": "vxx",
   "version": "0.5.8",
-  "description": "Transaction Tracing System",
+  "description": "VXX",
   "main": "index.js",
   "repository": "keymetrics/vxx",
   "scripts": {
@@ -11,11 +11,6 @@
     "bump": "./bin/run-bump.sh",
     "closure": "./node_modules/.bin/closure-npc"
   },
-  "keywords": [
-    "google",
-    "tracing",
-    "profiling"
-  ],
   "author": "Google Inc.",
   "contributors": [
     {
