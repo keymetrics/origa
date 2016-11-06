@@ -9,6 +9,8 @@ os:
 sudo: required
 before_install:
   - npm install -g yarn --cache-min 999999999
+  - sudo apt-get -qq update
+  - sudo apt-get install build-essential autoconf libtool
 services:
   - mysql
   - mongodb
