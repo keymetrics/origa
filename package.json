@@ -1,9 +1,9 @@
 {
-  "name": "km-tracing",
+  "name": "vxx",
   "version": "0.5.8",
-  "description": "Node.js Support for StackDriver Trace",
+  "description": "Transaction Tracing System",
   "main": "index.js",
-  "repository": "GoogleCloudPlatform/cloud-trace-nodejs",
+  "repository": "keymetrics/vxx",
   "scripts": {
     "test": "./bin/run-test.sh",
     "changelog": "./bin/run-changelog.sh",
