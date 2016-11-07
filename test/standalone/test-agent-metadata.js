@@ -25,7 +25,7 @@ nock.disableNetConnect();
 
 delete process.env.GCLOUD_PROJECT;
 
-describe('agent interaction with metadata service', function() {
+describe.skip('agent interaction with metadata service', function() {
 
   afterEach(function() {
     agent.stop();
