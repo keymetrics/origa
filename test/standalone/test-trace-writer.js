@@ -17,17 +17,9 @@
 'use strict';
 
 var assert = require('assert');
-var nock = require('nock');
 var cls = require('../../lib/cls.js');
 var agent = require('../..');
 var request = require('request');
-
-nock.disableNetConnect();
-
-var uri = 'https://cloudtrace.googleapis.com';
-var path = '/v1/projects/0/traces';
-
-process.env.VXX_PROJECT = 0;
 
 var queueSpans = function(n, privateAgent) {
   for (var i = 0; i < n; i++) {
@@ -35,75 +27,18 @@ var queueSpans = function(n, privateAgent) {
   }
 };
 
-var formatBuffer = function(buffer) {
-  return {
-    traces: buffer.map(function(e) { return JSON.parse(e); })
-  };
-};
-
 describe('tracewriter publishing', function() {
 
   it('should publish when queue fills', function(done) {
     var buf;
-    var scope = nock(uri)
-        .intercept(path, 'PATCH', function(body) {
-          var parsedOriginal = formatBuffer(buf);
-          assert.equal(JSON.stringify(body), JSON.stringify(parsedOriginal));
-          return true;
-        }).reply(200);
     var privateAgent = agent.start({bufferSize: 2, samplingRate: 0}).private_();
-    privateAgent.traceWriter.request_ = request; // Avoid authing
-    cls.getNamespace().run(function() {
-      queueSpans(2, privateAgent);
-      buf = privateAgent.traceWriter.buffer_;
-      setTimeout(function() {
-        agent.stop();
-        scope.done();
-        done();
-      }, 80);
-    });
-  });
-
-  it('should publish after timeout', function(done) {
-    var buf;
-    var scope = nock(uri)
-        .intercept(path, 'PATCH', function(body) {
-          var parsedOriginal = formatBuffer(buf);
-          assert.equal(JSON.stringify(body), JSON.stringify(parsedOriginal));
-          return true;
-        }).reply(200);
-    var privateAgent = agent.start({flushDelaySeconds: 0.01, samplingRate: -1}).private_();
-    privateAgent.traceWriter.request_ = request; // Avoid authing
     cls.getNamespace().run(function() {
       queueSpans(1, privateAgent);
-      buf = privateAgent.traceWriter.buffer_;
-      setTimeout(function() {
-        agent.stop();
-        scope.done();
+
+      privateAgent.traceWriter.on('transaction', function (trace) {
+        privateAgent.stop();
         done();
-      }, 20);
+      })
     });
   });
-
-  it('should drop on server error', function(done) {
-    var buf;
-    var scope = nock(uri)
-        .intercept(path, 'PATCH', function(body) {
-          var parsedOriginal = formatBuffer(buf);
-          assert.equal(JSON.stringify(body), JSON.stringify(parsedOriginal));
-          return true;
-        }).replyWithError('Simulated Network Error');
-    var privateAgent = agent.start({bufferSize: 2, samplingRate: -1}).private_();
-    privateAgent.traceWriter.request_ = request; // Avoid authing
-    cls.getNamespace().run(function() {
-      queueSpans(2, privateAgent);
-      buf = privateAgent.traceWriter.buffer_;
-      setTimeout(function() {
-        agent.stop();
-        scope.done();
-        done();
-      }, 20);
-    });
-  });
-
 });
