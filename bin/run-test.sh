@@ -23,7 +23,7 @@ for dir in test/hooks/fixtures/*/ ;
 do
   echo -en "travis_fold:start:npm_install_${dir}\\r" | tr / _
   echo "npm install in ${dir}"
-  (cd "${dir}"; yarn) || exit 1
+  (cd "${dir}"; npm install) || exit 1
   echo -en "travis_fold:end:npm_install_${dir}\\r" | tr / _
 done
 
