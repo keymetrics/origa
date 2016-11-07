@@ -28,6 +28,7 @@ var semver = require('semver');
 var constants = require('./lib/constants.js');
 var path = require('path');
 var util = require('./lib/util.js');
+var EventEmitter = require('events').EventEmitter;
 
 var modulesLoadedBeforeTrace = [];
 
@@ -63,7 +64,10 @@ var phantomTraceAgent = {
     fn(function() {});
   },
   setTransactionName: function() {},
-  addTransactionLabel: function() {}
+  addTransactionLabel: function() {},
+  getBus: function() {
+    util.inherits(this.prototype, EventEmitter.prototype)
+  }
 };
 
 /** @private */

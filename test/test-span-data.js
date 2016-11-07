@@ -76,7 +76,7 @@ describe('SpanData', function() {
 
   it('should close all spans', function(done) {
     cls.getNamespace().run(function() {
-      agent.getBus().on('transaction', function (trace) {
+      agent.traceWriter.on('transaction', function (trace) {
         for (var j = 0; j < trace.spans.length; j++) {
           assert.notEqual(trace.spans[j].endTime, '');
         }
