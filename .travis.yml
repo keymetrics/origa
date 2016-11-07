@@ -5,18 +5,28 @@ node_js:
    - "7"
 os:
   - linux
-sudo: required
-before_install:
-  - npm install -g yarn --cache-min 999999999
+  
+sudo: false
+
 services:
   - mysql
   - mongodb
-  - redis
+  - redis-server
+  
+before_install:
+  - npm install -g yarn --cache-min 999999999
+  - mysql -e "create database IF NOT EXISTS test;" -uroot
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('Password12!') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+
 env:
   - CXX=g++-4.8
+  
+script:
+  - ./bin/run-test.sh -c
+
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
+    - g++-4.8
