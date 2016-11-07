@@ -86,11 +86,11 @@ var initConfig = function(projectConfig) {
     }
   }
 
-  if (process.env.hasOwnProperty('VXX_TRACE_LOGLEVEL')) 
+  if (process.env.hasOwnProperty('VXX_TRACE_LOGLEVEL'))
     config.logLevel = process.env.VXX_TRACE_LOGLEVEL;
-  if (process.env.hasOwnProperty('VXX_TRACE_DISABLE')) 
+  if (process.env.hasOwnProperty('VXX_TRACE_DISABLE'))
     config.enabled = false;
-  
+
   return config;
 };
 
@@ -110,6 +110,10 @@ var publicAgent = {
     return agent.endSpan(spanData, labels);
   },
 
+  getCls: function() {
+    return agent.getCls();
+  },
+
   runInSpan: function(name, labels, fn) {
     return agent.runInSpan(name, labels, fn);
   },
@@ -126,6 +130,9 @@ var publicAgent = {
     return agent.addTransactionLabel(key, value);
   },
 
+  getAgent : function() {
+    return agent;
+  },
   getBus : function() {
     return agent.traceWriter;
   },
