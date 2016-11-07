@@ -8,9 +8,14 @@ os:
 sudo: required
 before_install:
   - npm install -g yarn --cache-min 999999999
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get -qq update
-  - sudo apt-get install build-essential autoconf libtool g++-4.8 -y
 services:
   - mysql
   - mongodb
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
