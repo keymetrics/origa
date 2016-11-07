@@ -16,13 +16,13 @@
 
 'use strict';
 
-process.env.GCLOUD_TRACE_LOGLEVEL = 4;
+process.env.VXX_TRACE_LOGLEVEL = 4;
 
 var assert = require('assert');
 var agent = require('../..');
 
 describe('should respect environment variables', function() {
-  it('should respect GCLOUD_TRACE_LOGLEVEL', function() {
+  it('should respect VXX_TRACE_LOGLEVEL', function() {
     agent.start();
     assert.equal(agent.private_().config_.logLevel, 4);
     agent.stop();

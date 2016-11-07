@@ -17,11 +17,6 @@
  */
 'use strict';
 
-// if (!process.env.GCLOUD_PROJECT) {
-//   console.log('The GCLOUD_PROJECT environment variable must be set.');
-//   process.exit(1);
-// }
-
 var config = { enhancedDatabaseReporting: true, samplingRate: 0 };
 var agent = require('../..').start(config).private_();
 // We want to disable publishing to avoid conflicts with production.

@@ -72,8 +72,21 @@ var agent = phantomTraceAgent;
 var initConfig = function(projectConfig) {
   var util = require('util');
   var config = {};
+
   util._extend(config, require('./config.js').trace);
   util._extend(config, projectConfig);
+  if (process.env.hasOwnProperty('VXX_CONFIG_PATH')) {
+    var c = require(path.resolve(process.env.VXX_CONFIG_PATH));
+    if (c) {
+      util._extend(config, c.trace);
+    }
+  }
+
+  if (process.env.hasOwnProperty('VXX_TRACE_LOGLEVEL')) 
+    config.logLevel = process.env.VXX_TRACE_LOGLEVEL;
+  if (process.env.hasOwnProperty('VXX_TRACE_DISABLE')) 
+    config.enabled = false;
+  
   return config;
 };
 

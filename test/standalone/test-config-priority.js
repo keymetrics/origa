@@ -23,10 +23,10 @@ var assert = require('assert');
 
 // Fixtures configuration:
 // { logLevel: 4, stackTraceLimit: 1 };
-process.env.GCLOUD_DIAGNOSTICS_CONFIG =
+process.env.VXX_CONFIG_PATH =
   path.join(__dirname, '..', 'fixtures', 'test-config.js');
 
-process.env.GCLOUD_TRACE_LOGLEVEL = 2;
+process.env.VXX_TRACE_LOGLEVEL = 2;
 
 var agent = require('../..').start({logLevel: 3, stackTraceLimit: 2,
   flushDelaySeconds: 31});

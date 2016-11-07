@@ -17,8 +17,7 @@
 'use strict';
 
 if (process.argv[2] === '-i') {
-  process.env.GCLOUD_TRACE_ENABLED = true;
-  process.env.GCLOUD_TRACE_EXCLUDE_HTTP = true;
+  process.env.VXX_TRACE_ENABLED = true;
   var traceAgent = require('../../..').start().private_();
   // We want to drop all spans and avoid network ops
   traceAgent.traceWriter.writeSpan = function() {};

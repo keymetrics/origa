@@ -16,11 +16,6 @@
 
 'use strict';
 
-if (!process.env.GCLOUD_PROJECT) {
-  console.log('The GCLOUD_PROJECT environment variable must be set.');
-  process.exit(1);
-}
-
 var assert = require('assert');
 var agent = require('../..');
 var cls = require('../../lib/cls.js');

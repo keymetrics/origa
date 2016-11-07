@@ -16,7 +16,7 @@
 
 'use strict';
 
-delete process.env.GCLOUD_PROJECT;
+delete process.env.VXX_PROJECT;
 
 var assert = require('assert');
 var agent = require('../..');

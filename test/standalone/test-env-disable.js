@@ -16,13 +16,13 @@
 
 'use strict';
 
-process.env.GCLOUD_TRACE_DISABLE = 1;
+process.env.VXX_TRACE_DISABLE = 1;
 
 var assert = require('assert');
 var agent = require('../..');
 
 describe('should respect environment variables', function() {
-  it('should respect GCLOUD_TRACE_DISABLE', function() {
+  it('should respect VXX_TRACE_DISABLE', function() {
     agent.start();
     assert(!agent.isActive());
     agent.stop();

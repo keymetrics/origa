@@ -23,7 +23,7 @@ var traceLabels = require('../../lib/trace-labels.js');
 
 nock.disableNetConnect();
 
-delete process.env.GCLOUD_PROJECT;
+delete process.env.VXX_PROJECT;
 
 describe.skip('agent interaction with metadata service', function() {
 
@@ -69,9 +69,9 @@ describe.skip('agent interaction with metadata service', function() {
 
   it('should not query metadata service when env. var. is set', function() {
     nock.disableNetConnect();
-    process.env.GCLOUD_PROJECT=0;
+    process.env.VXX_PROJECT=0;
     agent.start({logLevel: 0});
-    delete process.env.GCLOUD_PROJECT;
+    delete process.env.VXX_PROJECT;
   });
 
   it('should attach hostname to spans when provided', function(done) {

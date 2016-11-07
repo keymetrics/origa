@@ -23,7 +23,7 @@ var assert = require('assert');
 
 // Fixtures configuration:
 // { logLevel: 4, stackTraceLimit: 1 };
-process.env.GCLOUD_DIAGNOSTICS_CONFIG = path.join('fixtures', 'test-config.js');
+process.env.VXX_CONFIG_PATH = path.join('fixtures', 'test-config.js');
 
 process.chdir('test');
 

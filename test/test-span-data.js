@@ -16,8 +16,8 @@
 
 'use strict';
 
-// if (!process.env.GCLOUD_PROJECT) {
-//   console.log('The GCLOUD_PROJECT environment variable must be set.');
+// if (!process.env.VXX_PROJECT) {
+//   console.log('The VXX_PROJECT environment variable must be set.');
 //   process.exit(1);
 // }
 
