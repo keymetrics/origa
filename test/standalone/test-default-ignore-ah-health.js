@@ -27,13 +27,17 @@ describe('test-default-ignore-ah-health', function() {
     app.get('/_ah/health', function (req, res) {
       res.send('🏥');
     });
+
     var server = app.listen(9042, function() {
+      agent.private_().traceWriter.on('transaction', function (trace) {
+        assert(trace, undefined);
+      })
+
       http.get({port: 9042, path: '/_ah/health'}, function(res) {
         var result = '';
         res.on('data', function(data) { result += data; });
         res.on('end', function() {
           assert.equal(result, '🏥');
-          assert.equal(agent.private_().traceWriter.buffer_.length, 0);
           server.close();
           done();
         });

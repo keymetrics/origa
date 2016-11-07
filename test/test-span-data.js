@@ -74,17 +74,18 @@ describe('SpanData', function() {
     });
   });
 
-  it('should close all spans', function() {
+  it('should close all spans', function(done) {
     cls.getNamespace().run(function() {
+      agent.getBus().on('transaction', function (trace) {
+        for (var j = 0; j < trace.spans.length; j++) {
+          assert.notEqual(trace.spans[j].endTime, '');
+        }
+        agent.stop();
+        done();
+      })
       var spanData = agent.createRootSpanData('hi');
       spanData.createChildSpanData('sub');
       spanData.close();
-      var traces = agent.traceWriter.buffer_.map(JSON.parse);
-      for (var i = 0; i < traces.length; i++) {
-        for (var j = 0; j < traces[i].spans.length; j++) {
-          assert.notEqual(traces[i].spans[j].endTime, '');
-        }
-      }
     });
   });
 });

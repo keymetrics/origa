@@ -30,17 +30,11 @@ var queueSpans = function(n, privateAgent) {
   }
 };
 
-var formatBuffer = function(buffer) {
-  return {
-    traces: buffer.map(function(e) { return JSON.parse(e); })
-  };
-};
 
 describe('tracewriter publishing', function() {
 
   it.skip('should publish on unhandled exception', function(done) {
     process.removeAllListeners('uncaughtException'); // Remove mocha handler
-    var buf;
     process.on('uncaughtException', function() {
       setTimeout(function() {
         assert.equal(process.listeners('uncaughtException').length, 2);
@@ -59,7 +53,6 @@ describe('tracewriter publishing', function() {
       privateAgent.traceWriter.request_ = request; // Avoid authing
       cls.getNamespace().run(function() {
         queueSpans(2, privateAgent);
-        buf = privateAgent.traceWriter.buffer_;
         throw new Error(':(');
       });
     });

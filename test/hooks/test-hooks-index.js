@@ -34,11 +34,4 @@ describe('findModuleVersion', function() {
     var modulePath = findModulePath('http', module);
     assert.equal(findModuleVersion(modulePath, Module._load), process.version);
   });
-
-  it.skip('should work with namespaces', function() {
-    var modulePath = findModulePath('@google/cloud-diagnostics-common', module);
-    var truePackage =
-      require('../../node_modules/@google/cloud-diagnostics-common/package.json');
-    assert.equal(findModuleVersion(modulePath, Module._load), truePackage.version);
-  });
 });

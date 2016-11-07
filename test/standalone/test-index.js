@@ -159,70 +159,59 @@ describe('index.js', function() {
     });
   });
 
-  it('should produce real spans runInSpan sync', function() {
+  it('should produce real spans runInSpan sync', function(done) {
     agent.start();
     cls.getNamespace().run(function() {
+      agent.getBus().on('transaction', function (trace) {
+        assert.equal(trace.spans[1].labels.key, 'val');
+        agent.stop();
+        done();
+      })
+
       var root = agent.private_().createRootSpanData('root', 1, 0);
       var testLabel = { key: 'val' };
       agent.runInSpan('sub', testLabel, function() {});
       root.close();
-      var spanPredicate = function(spanData) {
-        return spanData.spans[1].name === 'sub';
-      };
-      var matchingSpans = agent.private_().traceWriter.buffer_
-                            .map(JSON.parse)
-                            .filter(spanPredicate);
-      assert.equal(matchingSpans.length, 1);
-      assert.equal(matchingSpans[0].spans[1].labels.key, 'val');
-      agent.stop();
     });
   });
 
   it('should produce real spans runInSpan async', function(done) {
     agent.start();
     cls.getNamespace().run(function() {
+      agent.getBus().on('transaction', function (trace) {
+        var span = trace.spans[1];
+        var duration = Date.parse(span.endTime) - Date.parse(span.startTime);
+        assert(duration > 190);
+        assert(duration < 300);
+        assert.equal(span.labels.key, 'val');
+        agent.stop();
+        done();
+      })
+
       var root = agent.private_().createRootSpanData('root', 1, 0);
       var testLabel = { key: 'val' };
       agent.runInSpan('sub', function(endSpan) {
         setTimeout(function() {
           endSpan(testLabel);
           root.close();
-          var spanPredicate = function(spanData) {
-            return spanData.spans[1].name === 'sub';
-          };
-          var matchingSpans = agent.private_().traceWriter.buffer_
-                                .map(JSON.parse)
-                                .filter(spanPredicate);
-          assert.equal(matchingSpans.length, 1);
-          var span = matchingSpans[0].spans[1];
-          var duration = Date.parse(span.endTime) - Date.parse(span.startTime);
-          assert(duration > 190);
-          assert(duration < 300);
-          assert.equal(span.labels.key, 'val');
-          agent.stop();
-          done();
         }, 200);
       });
     });
   });
 
-  it('should produce real root spans runInRootSpan sync', function() {
+  it('should produce real root spans runInRootSpan sync', function(done) {
     agent.start();
     cls.getNamespace().run(function() {
       var testLabel = { key: 'val' };
+      agent.getBus().on('transaction', function (trace) {
+        assert.equal(trace.spans[0].labels.key, 'val');
+        agent.stop();
+        done();
+      })
       agent.runInRootSpan('root', testLabel, function() {
         var childSpan = agent.startSpan('sub');
         agent.endSpan(childSpan);
       });
-      var spanPredicate = function(spanData) {
-        return spanData.spans[0].name === 'root' && spanData.spans[1].name === 'sub';
-      };
-      var matchingSpans = agent.private_().traceWriter.buffer_
-                            .map(JSON.parse)
-                            .filter(spanPredicate);
-      assert.equal(matchingSpans.length, 1);
-      assert.equal(matchingSpans[0].spans[0].labels.key, 'val');
-      agent.stop();
     });
   });
 
@@ -230,25 +219,20 @@ describe('index.js', function() {
     agent.start();
     cls.getNamespace().run(function() {
       var testLabel = { key: 'val' };
+      agent.getBus().on('transaction', function (trace) {
+        var span = trace.spans[0];
+        var duration = Date.parse(span.endTime) - Date.parse(span.startTime);
+        assert(duration > 190);
+        assert(duration < 300);
+        assert.equal(span.labels.key, 'val');
+        agent.stop();
+        done();
+      })
       agent.runInRootSpan('root', testLabel, function(endSpan) {
         var childSpan = agent.startSpan('sub');
         setTimeout(function() {
           agent.endSpan(childSpan);
           endSpan(testLabel);
-          var spanPredicate = function(spanData) {
-            return spanData.spans[0].name === 'root' && spanData.spans[1].name === 'sub';
-          };
-          var matchingSpans = agent.private_().traceWriter.buffer_
-                                .map(JSON.parse)
-                                .filter(spanPredicate);
-          assert.equal(matchingSpans.length, 1);
-          var span = matchingSpans[0].spans[0];
-          var duration = Date.parse(span.endTime) - Date.parse(span.startTime);
-          assert(duration > 190);
-          assert(duration < 300);
-          assert.equal(span.labels.key, 'val');
-          agent.stop();
-          done();
         }, 200);
       });
     });
@@ -265,25 +249,21 @@ describe('index.js', function() {
 
   it('should not allow nested root spans', function(done) {
     agent.start();
+    agent.getBus().on('transaction', function (trace) {
+      var span = trace.spans[0];
+      var duration = Date.parse(span.endTime) - Date.parse(span.startTime);
+      assert(duration > 190);
+      assert(duration < 300);
+      console.log(span.labels)
+      agent.stop();
+      done();
+    })
     agent.runInRootSpan('root', function(cb1) {
       var finished = false;
       var finish = function () {
         assert(!finished);
         finished = true;
         cb1();
-        var spanPredicate = function(spanData) {
-          return spanData.spans[0].name === 'root';
-        };
-        var matchingSpans = agent.private_().traceWriter.buffer_
-          .map(JSON.parse)
-          .filter(spanPredicate);
-        assert.equal(matchingSpans.length, 1);
-        var span = matchingSpans[0].spans[0];
-        var duration = Date.parse(span.endTime) - Date.parse(span.startTime);
-        assert(duration > 190);
-        assert(duration < 300);
-        agent.stop();
-        done();
       };
       setTimeout(function() {
         agent.runInRootSpan('root2', function(cb2) {
@@ -311,6 +291,6 @@ describe('index.js', function() {
   });
 
   it('should set agent on global object', function() {
-    assert.equal(global._google_trace_agent, agent);
+    assert.equal(global._km_trace_agent, agent);
   });
 });

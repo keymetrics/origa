@@ -37,6 +37,7 @@ describe('tracewriter publishing', function() {
 
       privateAgent.traceWriter.on('transaction', function (trace) {
         privateAgent.stop();
+        privateAgent.traceWriter.removeAllListeners('transaction');
         done();
       })
     });

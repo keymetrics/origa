@@ -28,12 +28,15 @@ describe('test-ignore-urls', function() {
       res.send('hi');
     });
     var server = app.listen(9042, function() {
+      agent.private_().traceWriter.on('transaction', function (trace) {
+        assert(trace, undefined);
+      })
+      
       http.get({port: 9042, path: '/test'}, function(res) {
         var result = '';
         res.on('data', function(data) { result += data; });
         res.on('end', function() {
           assert.equal(result, 'hi');
-          assert.equal(agent.private_().traceWriter.buffer_.length, 0);
           server.close();
           done();
         });
