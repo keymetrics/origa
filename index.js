@@ -33,7 +33,7 @@ var modulesLoadedBeforeTrace = [];
 
 for (var i = 0; i < filesLoadedBeforeTrace.length; i++) {
   var moduleName = util.packageNameFromPath(filesLoadedBeforeTrace[i]);
-  if (moduleName && moduleName !== '@google/cloud-trace' &&
+  if (moduleName && moduleName !== 'vxx' &&
       modulesLoadedBeforeTrace.indexOf(moduleName) === -1) {
     modulesLoadedBeforeTrace.push(moduleName);
   }
@@ -127,7 +127,7 @@ var publicAgent = {
     if (!config.enabled) {
       return this;
     }
-    var logger = new Logger(config.logLevel, 'km-tracing');
+    var logger = new Logger(config.logLevel, 'vxx');
     if (!semver.satisfies(process.versions.node, '>=0.12')) {
       logger.error('Tracing is only supported on Node versions >=0.12');
       return this;

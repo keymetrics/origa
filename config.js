@@ -56,7 +56,7 @@ module.exports = {
     // sampling is disabled and all traces are recorded. Sampling rates greater
     // than 1000 are not supported and will result in at most 1000 samples per
     // second. Some Google Cloud environments may further limit this rate.
-    samplingRate: 10,
+    samplingRate: 0,
 
     // The number of transactions we buffer before we publish to the trace
     // API, unless we hit `flushDelaySeconds` first.
