@@ -2,6 +2,8 @@
 var vxx = require('../..').start();
 
 var mongoose = require('../hooks/fixtures/mongoose4');
+var express = require('../hooks/fixtures/express4');
+
 var Schema = mongoose.Schema;
 var assert = require('assert');
 
@@ -12,6 +14,20 @@ var simpleSchema = new Schema({
 });
 
 var Simple = mongoose.model('Simple', simpleSchema);
+
+
+var http = require('http');
+var PORT = 8080;
+
+function doRequest(method, path, cb) {
+  http.get({port: PORT, method: method, path: path || '/'}, function(res) {
+    var result = '';
+    res.on('data', function(data) { result += data; });
+    res.on('end', function() {
+      cb();
+    });
+  });
+}
 
 describe('API', function() {
   beforeEach(function(done) {
@@ -51,7 +67,7 @@ describe('API', function() {
       f3: 1729
     });
 
-    vxx.getBus().on('transaction', function(transactions) {
+    vxx.getBus().once('transaction', function(transactions) {
       assert(transactions.spans.length == 3);
       done();
     });
@@ -68,17 +84,77 @@ describe('API', function() {
         }, 2);
       });
     });
+  });
+
+  const EventEmitter = require('events');
+
+  it('should trace across EE', function(done) {
+    const myEmitter = new EventEmitter();
+
+    vxx.getBus().once('transaction', function(transactions) {
+      assert(transactions.spans.length == 3);
+      done();
+    });
+
+    vxx.runInRootSpan('lazer', {label : 'fake-thing' }, function(endSpan) {
+      //vxx.setTransactionName('new name');
+
+      var span = vxx.startSpan('timeout');
+      span.addLabel('time', '1000');
+
+      // If we drop that line context inside the 'done' events are lost
+      vxx.getCls().getNamespace().bindEmitter(myEmitter);
+
+      myEmitter.on('done', function() {
+        vxx.endSpan(span, { success: true });
+
+        var span2 = vxx.startSpan('tvm');
+        setTimeout(function() {
+          vxx.endSpan(span2);
+          endSpan();
+        }, 1000);
+      });
+    });
+
+    // Here we emit event out of scope
+    setTimeout(function() {
+      myEmitter.emit('done');
+    }, 400);
 
   });
+
+  describe('Express server', function() {
+    it('should accurately measure get time, get', function(done) {
+      var server;
+      var data = new Simple({
+        f1: 'val',
+        f2: false,
+        f3: 1729
+      });
+
+      vxx.getBus().once('transaction', function(transactions) {
+        assert(transactions.spans.length == 3);
+        server.close();
+        done();
+      });
+
+      var app = express();
+
+      app.get('/', function (req, res, next) {
+        setTimeout(function() {
+          data.save(function(err, dt) {
+            dt.remove(function() {
+              res.send(200);
+            });
+          });
+        }, 100);
+      });
+
+      server = app.listen(8080, function() {
+        doRequest('GET', '/', function() {
+
+        });
+      });
+    });
+  });
 });
-
-
-
-// function runInTransaction(fn) {
-//   vxx.getCls().getNamespace().run(function() {
-//     var spanData = vxx.getAgent().createRootSpanData('outer');
-//     fn(function() {
-//       spanData.close();
-//     });
-//   });
-// }
