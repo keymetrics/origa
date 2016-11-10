@@ -88,6 +88,10 @@ var publicAgent = {
   getAgent: function() {
     return agent;
   },
+  getCls : function() {
+    return agent.getCls()
+  },
+
   getBus : function() {
     return agent.traceWriter;
   },
