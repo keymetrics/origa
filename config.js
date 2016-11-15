@@ -25,7 +25,7 @@ module.exports = {
 
     // If true, information about query parameters and results will be
     // attached to spans representating database operations.
-    enhancedDatabaseReporting: true,
+    enhancedDatabaseReporting: false,
 
     // The maximum result size in characters to report on database spans if
     // `enhancedDatabaseReporting` is enabled.
@@ -38,19 +38,17 @@ module.exports = {
     // @type {number} max number of frames to include on traces (0 disables)
     stackTraceLimit: 10,
 
-    // We buffer the captured traces for `flushDelaySeconds` before publishing
-    // to the trace API; unless the buffer fills up before then.
-    // See `bufferSize`.
+    // Not used
     flushDelaySeconds: 30,
-
-    // If paths are present in this array, then these paths will be ignored before
-    // `samplingRate` based decisions are made. Paths must include a leading
-    // forward slash and be of the form:
-    //   /componentOne/componentTwo/...
-    // Paths can additionally be classified by regex in which case any path matching
-    // any provided regex will be ignored.
-    // We ignore the health checker probes (/_ah/health) by default.
-    ignoreUrls: [ '/_ah/health' ],
+    
+    // This filter will exclude trace before any rate is applied
+    // For each entry key, there is an array of value that might matching
+    // if any of these value are matched, trace are ignored
+    // Any value can be string or regex
+    filter: {
+      'url': [],
+      'method': []
+    },
 
     // An upper bound on the number of traces to gather each second. If set to 0,
     // sampling is disabled and all traces are recorded. Sampling rates greater
@@ -58,9 +56,8 @@ module.exports = {
     // second. Some Google Cloud environments may further limit this rate.
     samplingRate: 0,
 
-    // The number of transactions we buffer before we publish to the trace
-    // API, unless we hit `flushDelaySeconds` first.
-    bufferSize: 1000,
+    // Not used
+    bufferSize: 5,
 
     // Specifies the behavior of the trace agent in the case of an uncaught exception.
     // Possible values are:
