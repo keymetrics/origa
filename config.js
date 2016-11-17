@@ -45,7 +45,7 @@ module.exports = {
     // For each entry key, there is an array of value that might matching
     // if any of these value are matched, trace are ignored
     // Any value can be string or regex
-    filter: {
+    ignoreFilter: {
       'url': [],
       'method': []
     },

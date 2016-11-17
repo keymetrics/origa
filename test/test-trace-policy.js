@@ -22,21 +22,20 @@ var tracingPolicy = require('../lib/tracing-policy.js');
 describe('FilterPolicy', function() {
   it('should not allow filtered urls', function() {
     var policy = tracingPolicy.createTracePolicy({samplingRate: 0,
-     filters: { url: ['/_ah/health', /\/book*/] } });
-    console.log(policy.shouldTrace(null, { url: 'http://localhost/_ah/health' }))
+     ignoreFilter: { url: ['/_ah/health', /\/book*/] } });
     assert(!policy.shouldTrace(null, { url: 'http://localhost/_ah/health' }));
     assert(!policy.shouldTrace(null, { url: 'http://localhost/book/test' }));
   });
 
   it('should allow non-filtered urls', function() {
     var policy = tracingPolicy.createTracePolicy({samplingRate: 0,
-      filters: { url: ['/_ah/health'] }});
+      ignoreFilter: { url: ['/_ah/health'] }});
     assert(policy.shouldTrace(null, { url: 'http://localhost/_ah/background' }));
   });
 
   it('should not allow filtered method', function() {
     var policy = tracingPolicy.createTracePolicy({samplingRate: 0,
-     filters: { method: ['OPTIONS', 'POST'] } });
+     ignoreFilter: { method: ['OPTIONS', 'POST'] } });
     assert(!policy.shouldTrace(null, { url: 'http://localhost/_ah/health', method: 'POST' }));
     assert(!policy.shouldTrace(null, { url: 'http://localhost/book/test', method: 'OPTIONS' }));
   });
