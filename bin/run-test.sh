@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Usage: -c to report coverage
+export NODE_ENV=test
 
 while true; do
   case $1 in
