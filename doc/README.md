@@ -32,9 +32,7 @@ require('vxx').start({
     },
 
     // 'express', 'hapi', 'http', 'restify'
-    excludedHooks: [],
-    stackTraceLimit: 0,
-    ignoreUrls: [ '/_ah/health' ]
+    excludedHooks: []
 });
 ```
 
