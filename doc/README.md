@@ -25,10 +25,16 @@ $ npm test
 See [the default configuration](config.js) for a list of possible configuration options. These options can be passed to the agent through the object argument to the start command shown above:
 
 ```
-require('km-tracing').start({
-  excludedHooks: [],
-  stackTraceLimit: 0,
-  ignoreUrls: [ '/_ah/health' ]
+require('vxx').start({
+    ignoreFilter: {
+      'url': [],
+      'method': []
+    },
+
+    // 'express', 'hapi', 'http', 'restify'
+    excludedHooks: [],
+    stackTraceLimit: 0,
+    ignoreUrls: [ '/_ah/health' ]
 });
 ```
 
