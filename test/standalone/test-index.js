@@ -94,7 +94,7 @@ describe('index.js', function() {
     wrapTest(mongo.Server.prototype, 'insert');
     wrapTest(mongo.Server.prototype, 'update');
     wrapTest(mongo.Server.prototype, 'remove');
-    wrapTest(mongo.Cursor.prototype, 'next');
+    wrapTest(mongo.Cursor.prototype, '_find');
     agent.stop();
   });
 
