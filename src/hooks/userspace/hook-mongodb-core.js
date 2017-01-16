@@ -128,14 +128,16 @@ module.exports = function(version_, agent_) {
         shimmer.wrap(mongo.Server.prototype, 'insert', wrapWithLabel('mongo-insert'));
         shimmer.wrap(mongo.Server.prototype, 'update', wrapWithLabel('mongo-update'));
         shimmer.wrap(mongo.Server.prototype, 'remove', wrapWithLabel('mongo-remove'));
-        shimmer.wrap(mongo.Cursor.prototype, 'next', nextWrap);
+        shimmer.wrap(mongo.Cursor.prototype, '_find', nextWrap);
+        shimmer.wrap(mongo.Cursor.prototype, '_getmore', nextWrap);
       },
       unpatch: function(mongo) {
         shimmer.unwrap(mongo.Server.prototype, 'command');
         shimmer.unwrap(mongo.Server.prototype, 'insert');
         shimmer.unwrap(mongo.Server.prototype, 'update');
         shimmer.unwrap(mongo.Server.prototype, 'remove');
-        shimmer.unwrap(mongo.Cursor.prototype, 'next');
+        shimmer.unwrap(mongo.Cursor.prototype, '_find');
+        shimmer.unwrap(mongo.Cursor.prototype, '_getmore');
         agent_.logger.info('Mongo: unpatched');
       }
     }
