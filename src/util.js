@@ -89,7 +89,24 @@ function packageNameFromPath(path) {
   return matches && matches.length > 1 ? matches[1] : null;
 }
 
+
+/**
+ * Find function argument and return his position
+ * 
+ * @param {array} args arguments of the function where you want to find a callback
+ */
+function findCallbackArg (args) {
+	var position = undefined;
+  for (var i = 0; i < args.length; i++) {
+    if(typeof(args[i]) === 'function') {
+      return i;
+    }
+  }
+  return position;
+};
+
 module.exports = {
   stringifyPrefix: stringifyPrefix,
-  packageNameFromPath: packageNameFromPath
+  packageNameFromPath: packageNameFromPath,
+  findCallbackArg: findCallbackArg
 };

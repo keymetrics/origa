@@ -65,7 +65,7 @@ function requestWrap(request) {
     labels[TraceLabels.HTTP_URL_LABEL_KEY] = uri;
     var span = agent.startSpan(getSpanName(options), labels);
     // Adding context to the headers lets us trace the request
-    // as it makes it through other layers of the Google infrastructure
+    // as it makes it through other layers
     var context = agent.generateTraceContext(span, true);
     if (context) {
       options.headers[constants.TRACE_CONTEXT_HEADER_NAME] = context;

@@ -32,49 +32,41 @@ var uid = 1;
  * @constructor
  */
 function SpanData(agent, trace, name, parentSpanId, isRoot, skipFrames) {
+  var self = this;
   var spanId = uid++;
   this.agent = agent;
   this.span = new TraceSpan(name, spanId, parentSpanId);
   this.trace = trace;
   this.isRoot = isRoot;
   trace.spans.push(this.span);
+
   if (agent.config().stackTraceLimit > 0) {
-    // This is a mechanism to get the structured stack trace out of V8.
-    // prepareStackTrace is called th first time the Error#stack property is
-    // accessed. The original behavior is to format the stack as an exception
-    // throw, which is not what we like. We customize it.
-    //
-    // See: https://code.google.com/p/v8-wiki/wiki/JavaScriptStackTraceApi
-    //
+
     var origLimit = Error.stackTraceLimit;
     Error.stackTraceLimit = agent.config().stackTraceLimit + skipFrames;
+    var frames = agent.stackman(new Error(), function (stack) {
+      var finalFrames = [];
 
-    var origPrepare = Error.prepareStackTrace;
-    Error.prepareStackTrace = function(error, structured) {
-      return structured;
-    };
-    var e = {};
-    Error.captureStackTrace(e, SpanData);
+      // parse each frame to retrieve only important information
+      stack.frames.forEach(function (frame) {
+        if (!frame.isApp()) return ;
 
-    var stackFrames = [];
-    e.stack.forEach(function(callSite, i) {
-      if (i < skipFrames) {
-        return;
-      }
-      var functionName = callSite.getFunctionName();
-      var methodName = callSite.getMethodName();
-      var name = (methodName && functionName) ?
-        functionName + ' [as ' + methodName + ']' :
-        functionName || methodName || '<anonymous function>';
-      stackFrames.push(new StackFrame(undefined, name,
-        callSite.getFileName(), callSite.getLineNumber(),
-        callSite.getColumnNumber()));
+        var functionName = frame.getFunctionName();
+        var methodName = frame.getMethodName();
+        var name = (methodName && functionName) ?
+          functionName + ' [as ' + methodName + ']' :
+          functionName || methodName || '<anonymous function>';
+
+        // avoid frames from tracing module
+        if (frame.getFileName().indexOf('vxx') > -1)
+          return ;
+        finalFrames.push(new StackFrame(null, name, frame.getFileName(),
+          frame.getLineNumber(), frame.getColumnNumber(), frame.context));
+      })
+      // set it as labels after parsing
+      self.span.setLabel(TraceLabels.STACK_TRACE_DETAILS_KEY, JSON.stringify(finalFrames));
     });
-    this.span.setLabel(TraceLabels.STACK_TRACE_DETAILS_KEY,
-      JSON.stringify({stack_frame: stackFrames}));
-
     Error.stackTraceLimit = origLimit;
-    Error.prepareStackTrace = origPrepare;
   }
 }
 
@@ -122,7 +114,7 @@ SpanData.prototype.close = function() {
  * @param {number|undefined} columnNumber
  * @constructor @private
  */
-function StackFrame(className, methodName, fileName, lineNumber, columnNumber) {
+function StackFrame(className, methodName, fileName, lineNumber, columnNumber, context, type) {
   if (className) {
     this.class_name = className;
   }
@@ -137,6 +129,9 @@ function StackFrame(className, methodName, fileName, lineNumber, columnNumber) {
   }
   if (typeof columnNumber === 'number') {
     this.column_number = columnNumber;
+  }
+  if (typeof(context) === 'object') {
+    this.context = context;
   }
 }
 

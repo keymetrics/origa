@@ -42,9 +42,6 @@ module.exports = {
   getNamespace: getNamespace,
 
   getRootContext: function getRootContext() {
-    // First getNamespace check is necessary in case any
-    // patched closures escaped before the agent was stopped and the
-    // namespace was destroyed.
     if (getNamespace() && getNamespace().get('root')) {
       return getNamespace().get('root');
     }

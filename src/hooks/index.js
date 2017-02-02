@@ -47,7 +47,7 @@ var toInstrument = Object.create(null, {
       patches: {} } },
   'koa': { enumerable: true, value: { file: './userspace/hook-koa.js',
       patches: {} } },
-  'mongodb-core': { enumerable: true, value: { file: './userspace/hook-mongodb-core.js',
+  'mongodb': { enumerable: true, value: { file: './userspace/hook-mongodb.js',
       patches: {} } },
   'mysql': { enumerable: true, value: { file: './userspace/hook-mysql.js',
       patches: {} } },

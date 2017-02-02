@@ -25,6 +25,7 @@ var uuid = require('uuid');
 var constants = require('./constants.js');
 var tracingPolicy = require('./tracing-policy.js');
 var isEqual = require('lodash.isequal');
+var Stackman = require('stackman');
 
 /** @type {TraceAgent} */
 var traceAgent;
@@ -46,6 +47,7 @@ function TraceAgent(config, logger) {
   };
 
   this.policy = tracingPolicy.createTracePolicy(config);
+  this.stackman = Stackman({ filter: '/node_modules/', context: 3 })
 
   if (config.onUncaughtException !== 'ignore') {
     this.unhandledException = function() {

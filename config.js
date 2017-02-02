@@ -19,7 +19,7 @@
 module.exports = {
   trace: {
     // Log levels: 0-disabled,1-error,2-warn,3-info,4-debug
-    logLevel: 1,
+    logLevel: 4,
 
     enabled: true,
 
@@ -36,7 +36,7 @@ module.exports = {
     excludedHooks: [],
 
     // @type {number} max number of frames to include on traces (0 disables)
-    stackTraceLimit: 10,
+    stackTraceLimit: 30,
 
     // Not used
     flushDelaySeconds: 30,
