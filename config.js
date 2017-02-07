@@ -36,7 +36,7 @@ module.exports = {
     excludedHooks: [],
 
     // @type {number} max number of frames to include on traces (0 disables)
-    stackTraceLimit: 10,
+    stackTraceLimit: 20,
 
     // Not used
     flushDelaySeconds: 30,
