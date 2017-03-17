@@ -14,34 +14,32 @@
  * limitations under the License.
  */
 
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 var assert = require('assert');
+var Module = require('module');
+var semver = require('semver');
 var util = require('../src/util.js');
 var path = require('path');
+var constants = require('../src/constants.js');
 
-var o = {
-  a: 5,
-  b: 'hi',
-  c: function() {},
-  d: {
-    e: {
-      f: null,
-      g: undefined,
-      h: [1, 2]
-    }
-  }
-};
-
-describe('util.stringifyPrefix', function() {
+describe('util.truncate', function() {
   it('should truncate objects larger than size', function() {
-    assert.equal(util.stringifyPrefix(o, 15),
-      '{a:5,b:hi,c:...');
+    assert.strictEqual(util.truncate('abcdefghijklmno', 5), 'ab...');
   });
 
   it('should not truncate objects smaller than size', function() {
-    assert.equal(util.stringifyPrefix(o, 150),
-      '{a:5,b:hi,c:[Function],d:{e:{f:null,g:undefined,h:{0:1,1:2}}}}');
+    assert.strictEqual(util.truncate('abcdefghijklmno', 50), 'abcdefghijklmno');
+  });
+
+  it('should handle unicode characters', function() {
+    var longName = Array(120).join('☃');
+    assert.strictEqual(util.truncate(longName, constants.TRACE_SERVICE_SPAN_NAME_LIMIT),
+      Array(42).join('☃') + '...');
   });
 });
 
@@ -65,5 +63,26 @@ describe('util.packageNameFromPath', function() {
                'index.js');
     assert.equal(util.packageNameFromPath(p),
       path.join('@google','cloud-trace'));
+  });
+});
+
+describe('util.findModuleVersion', function() {
+  it('should correctly find package.json for userspace packages', function() {
+    var pjson = require('../package.json');
+    var modulePath = util.findModulePath('glob', module);
+    assert(semver.satisfies(util.findModuleVersion(modulePath, Module._load),
+        pjson.devDependencies.glob));
+  });
+
+  it('should not break for core packages', function() {
+    var modulePath = util.findModulePath('http', module);
+    assert.equal(util.findModuleVersion(modulePath, Module._load), process.version);
+  });
+
+  it('should work with namespaces', function() {
+    var modulePath = util.findModulePath('vxx', module);
+    var truePackage =
+      require('../node_modules/vxx/package.json');
+    assert.equal(util.findModuleVersion(modulePath, Module._load), truePackage.version);
   });
 });

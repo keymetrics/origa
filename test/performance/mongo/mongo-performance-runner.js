@@ -22,12 +22,14 @@
 // Run a mongo image binding the mongo port
 //   ex) docker run -p 27017:27017 -d mongo
 
-var traceAgent;
+var common;
+var agent;
 if (process.argv[2] === '-i') {
   process.env.GCLOUD_TRACE_ENABLED = true;
-  traceAgent = require('../../..').start().private_();
+  common = require('../../hooks/common.js');
+  agent = require('../../..').start();
   // We want to drop all spans and avoid network ops
-  traceAgent.traceWriter.writeSpan = function() {};
+  common.installNoopTraceWriter(agent);
 }
 
 var mongoose = require('mongoose');
@@ -49,12 +51,8 @@ var sim = new Simple({
 });
 
 var runInTransaction = function(fn) {
-  var cls = require('../../../src/cls.js');
-  cls.getNamespace().run(function() {
-    var span = traceAgent.createRootSpanData('outer');
-    fn(function() {
-      span.close();
-    });
+  common.runInTransaction(agent, function(end) {
+    end();
   });
 };
 
@@ -89,7 +87,7 @@ var work = function(endTransaction) {
   });
 };
 
-if (traceAgent) {
+if (agent) {
   work = runInTransaction.bind(null, work);
 }
 

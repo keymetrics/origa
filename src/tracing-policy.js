@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 function RateLimiterPolicy(samplesPerSecond) {
@@ -38,11 +42,12 @@ function FilterPolicy(basePolicy, filters) {
 }
 
 FilterPolicy.prototype.matches = function(request) {
-  var self = this, match = false;
+  var self = this;
+  var match = false;
   Object.keys(request).forEach(function (key) {
-    if (!(self.filters[key] instanceof Array)) return ;
+    if (!(self.filters[key] instanceof Array)) return;
 
-    return self.filters[key].some(function(candidate) {
+    return self.filters[key].some(function (candidate) {
       match = match ? true : ((typeof candidate === 'string' && request[key].indexOf(candidate) > -1) ||
        (candidate instanceof RegExp && request[key].match(candidate)));
     });
@@ -58,16 +63,22 @@ function TraceAllPolicy() {}
 
 TraceAllPolicy.prototype.shouldTrace = function() { return true; };
 
+function TraceNonePolicy() {}
+
+TraceNonePolicy.prototype.shouldTrace = function() { return false; };
+
 module.exports = {
-  createTracePolicy: function(config) {
-    var basePolicy  = config.samplingRate < 1 ? new TraceAllPolicy() : new RateLimiterPolicy(config.samplingRate);
+  TraceAllPolicy: TraceAllPolicy,
+  TraceNonePolicy: TraceNonePolicy,
+  FilterPolicy: FilterPolicy,
+  createTracePolicy: function (config) {
+    var basePolicy = config.samplingRate < 1 ? new TraceAllPolicy() : new RateLimiterPolicy(config.samplingRate);
     if (!config.ignoreFilter) return basePolicy;
 
     // search for a filter to apply
     Object.keys(config.ignoreFilter).forEach(function (filter) {
-      if (config.ignoreFilter[filter].length > 0)
-        basePolicy = new FilterPolicy(basePolicy, config.ignoreFilter);
-    })
+      if (config.ignoreFilter[filter].length > 0) basePolicy = new FilterPolicy(basePolicy, config.ignoreFilter);
+    });
     // if no filter has been set fallback to base policy
     return basePolicy;
   }

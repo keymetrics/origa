@@ -12,4 +12,4 @@ RUN git clone --branch 1.2 https://github.com/christkv/mongodb-core.git --depth 
 RUN sed -i 's#"use strict"\;#"use strict"\;require\("vxx"\).start\(\)\;#g' /mongo/test/runner.js
 
 # Run tests
-RUN cd /mongo && npm install && npm install /trace/google-cloud-trace-*.tgz
+RUN cd /mongo && npm install && npm install vxx

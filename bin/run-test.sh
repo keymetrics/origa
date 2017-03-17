@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Usage: -c to report coverage
-export NODE_ENV=test
 
 while true; do
   case $1 in
@@ -17,10 +16,10 @@ while true; do
 done
 
 # Lint
-#jshint . || exit 1
-#Install framework deps
+jshint . || exit 1
 
-for dir in test/hooks/fixtures/*/ ;
+# Install framework deps
+for dir in test/plugins/fixtures/*/ ;
 do
   echo -en "travis_fold:start:npm_install_${dir}\\r" | tr / _
   echo "npm install in ${dir}"
@@ -39,12 +38,8 @@ function run {
   ($C "$(npm bin)/_mocha" -- $* --timeout 4000 --R spec) || exit 1
 }
 
-# Custom tests
-mocha test/api/*
-
 # Run test/coverage
-run test test/hooks
-for test in test/standalone/test-*.js ;
+for test in test/test-*.js test/plugins/*.js ;
 do
   if [[ ! $(node --version) =~ v0\.12\..* || ! "${test}" =~ .*trace\-koa\.js ]]
   then
@@ -53,13 +48,13 @@ do
 done
 
 # Conditionally publish coverage
-# if [ "$cover" ]; then
-#   istanbul report lcovonly
-#   ./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info
-#   rm -rf ./coverage
-# fi
+if [ "$cover" ]; then
+  istanbul report lcovonly
+  ./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info
+  rm -rf ./coverage
+fi
 
-# # Run non-interference tests
-# node test/non-interference/http-e2e.js || exit 1
-# node test/non-interference/express-e2e.js || exit 1
-# node test/non-interference/restify-e2e.js || exit 1
+# Run non-interference tests
+node test/non-interference/http-e2e.js || exit 1
+node test/non-interference/express-e2e.js || exit 1
+node test/non-interference/restify-e2e.js || exit 1
