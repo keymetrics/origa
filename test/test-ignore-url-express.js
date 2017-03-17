@@ -15,22 +15,13 @@
  */
 'use strict';
 
+var agent = require('../..').start({ ignoreFilter: { url: ['/test'] }, samplingRate: 0 });
+
 var assert = require('assert');
 var http = require('http');
-
-var common = require('./plugins/common.js');
+var express = require('../hooks/fixtures/express4');
 
 describe('test-ignore-urls', function() {
-  var agent;
-  var express;
-  before(function() {
-    agent = require('..').start({
-      ignoreUrls: ['/test'],
-      samplingRate: 0
-    });
-    express = require('./plugins/fixtures/express4');
-  });
-
   it('should not trace ignored urls', function(done) {
     var app = express();
     app.get('/test', function (req, res) {
@@ -42,7 +33,7 @@ describe('test-ignore-urls', function() {
         res.on('data', function(data) { result += data; });
         res.on('end', function() {
           assert.equal(result, 'hi');
-          assert.equal(common.getTraces(agent).length, 0);
+          assert.equal(agent.private_().traceWriter.buffer_.length, 0);
           server.close();
           done();
         });

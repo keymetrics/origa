@@ -26,7 +26,7 @@ module.exports = {
 
     // If true, information about query parameters and results will be
     // attached to spans representating database operations.
-    enhancedDatabaseReporting: false,
+    enhancedDatabaseReporting: true,
 
     // The maximum number of characters reported on a label value. This
     // cannot exceed 16383, the maximum value accepted by the service.
@@ -58,7 +58,7 @@ module.exports = {
     },
 
     // @type {number} max number of frames to include on traces (0 disables)
-    stackTraceLimit: 10,
+    stackTraceLimit: 20,
 
     // We buffer the captured traces for `flushDelaySeconds` before publishing
     // to the trace API; unless the buffer fills up before then.
@@ -72,13 +72,16 @@ module.exports = {
     // Paths can additionally be classified by regex in which case any path matching
     // any provided regex will be ignored.
     // We ignore the health checker probes (/_ah/health) by default.
-    ignoreUrls: [ '/_ah/health' ],
+    ignoreFilter: {
+      'url': [],
+      'method': []
+    },
 
     // An upper bound on the number of traces to gather each second. If set to 0,
     // sampling is disabled and all traces are recorded. Sampling rates greater
     // than 1000 are not supported and will result in at most 1000 samples per
     // second. Some Google Cloud environments may further limit this rate.
-    samplingRate: 10,
+    samplingRate: 0,
 
     // The number of transactions we buffer before we publish to the trace
     // API, unless we hit `flushDelaySeconds` first.
