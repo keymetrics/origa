@@ -55,5 +55,5 @@ Logger.prototype.debug = function () {
   }
 };
 
-Logger.prototype.LEVELS = LEVELS;
+Logger.LEVELS = LEVELS;
 module.exports = Logger;

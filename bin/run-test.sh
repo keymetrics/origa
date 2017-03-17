@@ -15,9 +15,6 @@ while true; do
   shift
 done
 
-# Lint
-jshint . || exit 1
-
 # Install framework deps
 for dir in test/plugins/fixtures/*/ ;
 do
