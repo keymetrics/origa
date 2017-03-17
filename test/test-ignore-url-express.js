@@ -15,11 +15,11 @@
  */
 'use strict';
 
-var agent = require('../..').start({ ignoreFilter: { url: ['/test'] }, samplingRate: 0 });
+var agent = require('..').start({ ignoreFilter: { url: ['/test'] }, samplingRate: 0 });
 
 var assert = require('assert');
 var http = require('http');
-var express = require('../hooks/fixtures/express4');
+var express = require('./plugins/fixtures/express4');
 
 describe('test-ignore-urls', function() {
   it('should not trace ignored urls', function(done) {
