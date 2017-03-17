@@ -81,11 +81,11 @@ TraceWriter.prototype.writeSpan = function(spanData) {
       spanData.addLabel(k, this.defaultLabels_[k]);
     }
   }
-
-  this.emit('transaction', spanData.trace);
   if (process.env.NODE_ENV === 'test') {
     this.queueTrace_(spanData.trace);
   }
+
+  this.emit('transaction', spanData.trace);
 };
 
 /**
