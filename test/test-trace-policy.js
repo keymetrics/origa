@@ -26,7 +26,7 @@ var tracingPolicy = require('../src/tracing-policy.js');
 describe('FilterPolicy', function() {
   it('should not allow filtered urls', function() {
     var policy = tracingPolicy.createTracePolicy({samplingRate: 0,
-     ignoreFilter: { url: ['/_ah/health', /\/book*/] } });
+     ignoreFilter: { url: [/\/_ah\/health/, /\/book*/] } });
     assert(!policy.shouldTrace(null, { url: 'http://localhost/_ah/health' }));
     assert(!policy.shouldTrace(null, { url: 'http://localhost/book/test' }));
   });

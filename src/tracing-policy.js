@@ -36,26 +36,26 @@ RateLimiterPolicy.prototype.shouldTrace = function(dateMillis) {
   return true;
 };
 
-function FilterPolicy(basePolicy, filters) {
+function FilterPolicy (basePolicy, filters) {
   this.basePolicy = basePolicy;
   this.filters = filters;
+  this.filters['name'] = this.filters['path'];
 }
 
-FilterPolicy.prototype.matches = function(request) {
-  var self = this;
-  var match = false;
+FilterPolicy.prototype.matches = function (request) {
+  var self = this, match = false;
   Object.keys(request).forEach(function (key) {
     if (!(self.filters[key] instanceof Array)) return;
 
     return self.filters[key].some(function (candidate) {
-      match = match ? true : ((typeof candidate === 'string' && request[key].indexOf(candidate) > -1) ||
+      match = match ? true : ((typeof candidate === 'string' && request[key] === candidate) ||
        (candidate instanceof RegExp && request[key].match(candidate)));
     });
   });
   return match;
 };
 
-FilterPolicy.prototype.shouldTrace = function(dataMillis, request) {
+FilterPolicy.prototype.shouldTrace = function (dataMillis, request) {
   return !this.matches(request) && this.basePolicy.shouldTrace(dataMillis, request);
 };
 
@@ -73,13 +73,12 @@ module.exports = {
   FilterPolicy: FilterPolicy,
   createTracePolicy: function (config) {
     var basePolicy = config.samplingRate < 1 ? new TraceAllPolicy() : new RateLimiterPolicy(config.samplingRate);
-    if (!config.ignoreFilter) return basePolicy;
 
     // search for a filter to apply
-    Object.keys(config.ignoreFilter).forEach(function (filter) {
-      if (config.ignoreFilter[filter].length > 0) basePolicy = new FilterPolicy(basePolicy, config.ignoreFilter);
+    var hasFilter = Object.keys(config.ignoreFilter || []).some(function (filter) {
+      return config.ignoreFilter[filter].length > 0;
     });
     // if no filter has been set fallback to base policy
-    return basePolicy;
+    return hasFilter ? new FilterPolicy(basePolicy, config.ignoreFilter) : basePolicy;
   }
 };

@@ -84,7 +84,7 @@ function start(projectConfig) {
   } else if (config.logLevel >= Logger.LEVELS.length) {
     config.logLevel = Logger.LEVELS.length - 1;
   }
-  var logger = new Logger(config.logLevel, 'vxx');
+  var logger = new Logger(config.logLevel, config.logger === 'debug' ? 'vxx' : undefined);
 
   if (onUncaughtExceptionValues.indexOf(config.onUncaughtException) === -1) {
     logger.error('The value of onUncaughtException should be one of ',

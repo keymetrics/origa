@@ -41,6 +41,8 @@ function createMiddleware(api) {
     var options = {
       name: urlParse(req.url).pathname,
       traceContext: this.req.headers[api.constants.TRACE_CONTEXT_HEADER_NAME],
+      ip: req.ip,
+      method: req.method,
       skipFrames: 3
     };
     api.runInRootSpan(options, function(root) {

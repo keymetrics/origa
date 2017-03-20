@@ -41,6 +41,8 @@ function patchRestify(restify, api) {
       // as a label later.
       name: req.path(),
       url: req.url,
+      ip: req.ip,
+      method: req.method,
       traceContext: req.header(api.constants.TRACE_CONTEXT_HEADER_NAME, null),
       skipFrames: 3
     };

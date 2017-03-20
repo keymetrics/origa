@@ -15,7 +15,7 @@
  */
 'use strict';
 
-var agent = require('..').start({ ignoreFilter: { url: ['/test'] }, samplingRate: 0 });
+var agent = require('..').start({ ignoreFilter: { path: ['/test'] }, samplingRate: 0 });
 
 var assert = require('assert');
 var http = require('http');

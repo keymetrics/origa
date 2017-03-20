@@ -37,6 +37,8 @@ function patchModuleRoot(express, api) {
       name: req.path,
       traceContext: req.get(api.constants.TRACE_CONTEXT_HEADER_NAME),
       url: req.originalUrl,
+      ip: req.ip,
+      method: req.method,
       skipFrames: 3
     };
     api.runInRootSpan(options, function(rootSpan) {
