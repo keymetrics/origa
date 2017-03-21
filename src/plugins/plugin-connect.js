@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 var urlParse = require('url').parse;
@@ -24,7 +29,7 @@ function createMiddleware(api) {
     var options = {
       name: urlParse(req.originalUrl).pathname,
       traceContext: req.headers[api.constants.TRACE_CONTEXT_HEADER_NAME.toLowerCase()],
-      ip: req.ip,
+      ip: req.socket.remoteAddress,
       method: req.method,
       skipFrames: 3
     };

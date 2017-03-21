@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 var shimmer = require('shimmer');
@@ -38,7 +43,7 @@ function createMiddleware(api) {
     var options = {
       name: urlParse(req.url).pathname,
       traceContext: req.headers[api.constants.TRACE_CONTEXT_HEADER_NAME],
-      ip: req.ip,
+      ip: request.info.remoteAddress,
       method: req.method,
       url: req.url,
       skipFrames: 3
