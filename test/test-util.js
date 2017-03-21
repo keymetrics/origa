@@ -78,11 +78,4 @@ describe('util.findModuleVersion', function() {
     var modulePath = util.findModulePath('http', module);
     assert.equal(util.findModuleVersion(modulePath, Module._load), process.version);
   });
-
-  it('should work with namespaces', function() {
-    var modulePath = util.findModulePath('vxx', module);
-    var truePackage =
-      require('../node_modules/vxx/package.json');
-    assert.equal(util.findModuleVersion(modulePath, Module._load), truePackage.version);
-  });
 });
