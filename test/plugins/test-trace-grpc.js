@@ -387,28 +387,6 @@ Object.keys(versions).forEach(function(version) {
       });
     });
 
-    it('should respect the tracing policy', function(done) {
-      var next = function() {
-        var args = common.getShouldTraceArgs(agent);
-        assert.strictEqual(args.length, 4,
-          'expected one call for each of four gRPC method types but got ' +
-          args.length + ' instead');
-        var prefix = 'grpc:/nodetest.Tester/Test';
-        // calls to shouldTrace should be in the order which the client method
-        // of each type was called.
-        assert.deepEqual(args[3], [prefix + 'Unary', undefined]);
-        assert.deepEqual(args[2], [prefix + 'ClientStream', undefined]);
-        assert.deepEqual(args[1], [prefix + 'ServerStream', undefined]);
-        assert.deepEqual(args[0], [prefix + 'BidiStream', undefined]);
-        done();
-      };
-      next = callUnary.bind(null, client, grpc, {}, next);
-      next = callClientStream.bind(null, client, grpc, {}, next);
-      next = callServerStream.bind(null, client, grpc, {}, next);
-      next = callBidi.bind(null, client, grpc, {}, next);
-      next();
-    });
-
     it('should support distributed trace context', function(done) {
       // Enable asserting properties of the metdata on the grpc server.
       checkMetadata = true;
