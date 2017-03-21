@@ -189,7 +189,7 @@ describe('Trace Interface', function() {
 
     it('should respect filter urls', function() {
       var url = 'rootUrl';
-      var filterPolicy = new TracingPolicy.FilterPolicy(new TracingPolicy.TraceAllPolicy(), [url]);
+      var filterPolicy = new TracingPolicy.FilterPolicy(new TracingPolicy.TraceAllPolicy(), { url: [url] });
       var oldPolicy = common.replaceTracingPolicy(traceAPI, filterPolicy);
       traceAPI.runInRootSpan({name: 'root1', url: url}, function(rootSpan) {
         assert.strictEqual(rootSpan, null);
