@@ -11,11 +11,6 @@
     "bump": "./bin/run-bump.sh",
     "closure": "./node_modules/.bin/closure-npc"
   },
-  "keywords": [
-    "google",
-    "tracing",
-    "profiling"
-  ],
   "author": "Google Inc.",
   "license": "Apache-2.0",
   "engines": {
