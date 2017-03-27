@@ -105,6 +105,14 @@ function start(projectConfig) {
   traceApi.enable_(agent);
   pluginLoader.activate(agent);
 
+  traceApi.getCls = function() {
+    return agent.getCls();
+  };
+
+  traceApi.getBus = function() {
+    return agent.traceWriter;
+  };
+
   return traceApi;
 }
 

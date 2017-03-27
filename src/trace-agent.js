@@ -41,6 +41,10 @@ function TraceAgent(config, logger) {
 
   this.policy = tracingPolicy.createTracePolicy(config);
 
+  this.getCls = function() {
+    return cls;
+  };
+
   if (config.onUncaughtException !== 'ignore') {
     this.unhandledException = function() {
       traceAgent.traceWriter.flushBuffer_(traceAgent.config_.projectId);
