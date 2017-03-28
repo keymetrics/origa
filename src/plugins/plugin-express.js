@@ -41,7 +41,7 @@ function patchModuleRoot(express, api) {
       name: req.path,
       traceContext: req.get(api.constants.TRACE_CONTEXT_HEADER_NAME),
       url: req.originalUrl,
-      ip: req.ip,
+      ip: req.connection.remoteAddress,
       method: req.method,
       skipFrames: 3
     };
@@ -60,6 +60,7 @@ function patchModuleRoot(express, api) {
 
       var url = req.protocol + '://' + req.hostname + req.originalUrl;
       rootSpan.addLabel(labels.HTTP_METHOD_LABEL_KEY, req.method);
+      rootSpan.addLabel(labels.HTTP_PATH_LABEL_KEY, options.name);
       rootSpan.addLabel(labels.HTTP_URL_LABEL_KEY, url);
       rootSpan.addLabel(labels.HTTP_SOURCE_IP, req.connection.remoteAddress);
 

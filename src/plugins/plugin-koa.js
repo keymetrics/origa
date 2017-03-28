@@ -46,7 +46,7 @@ function createMiddleware(api) {
     var options = {
       name: urlParse(req.url).pathname,
       traceContext: this.req.headers[api.constants.TRACE_CONTEXT_HEADER_NAME],
-      ip: req.ip,
+      ip: req.connection.remoteAddress,
       method: req.method,
       skipFrames: 3
     };
@@ -66,6 +66,7 @@ function createMiddleware(api) {
       // req.path would be more desirable but is not set at the time our middlewear runs.
       root.addLabel(api.labels.HTTP_METHOD_LABEL_KEY, req.method);
       root.addLabel(api.labels.HTTP_URL_LABEL_KEY, url);
+      root.addLabel(api.labels.HTTP_PATH_LABEL_KEY, options.name);
       root.addLabel(api.labels.HTTP_SOURCE_IP, req.connection.remoteAddress);
 
       var context = root.getTraceContext();

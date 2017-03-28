@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 /**
@@ -28,6 +32,10 @@ var TraceLabels = {};
 TraceLabels.HTTP_RESPONSE_CODE_LABEL_KEY =
   'http/status_code';
 
+/**
+ * @type {string} The well-known label for http request path.
+ */
+TraceLabels.HTTP_PATH_LABEL_KEY = 'http/path';
 
 /**
  * @type {string} The well-known label for http request url.

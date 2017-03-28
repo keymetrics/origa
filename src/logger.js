@@ -25,7 +25,7 @@ var LEVELS = ['disabled', 'error', 'warn', 'info', 'debug'];
  */
 function Logger (level, name) {
   if (name) {
-    debug = require('debug')(name);
+    debug = require('debug')(typeof name === 'string' ? name : 'vxx');
   }
   this.level = level;
   this.debug('Logger started');
