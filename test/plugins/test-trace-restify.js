@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 var traceLabels = require('../../src/trace-labels.js');
@@ -170,6 +175,7 @@ describe('restify', function() {
             var labels = common.getMatchingSpan(agent, restifyPredicate).labels;
             assert.equal(labels[traceLabels.HTTP_RESPONSE_CODE_LABEL_KEY], '200');
             assert.equal(labels[traceLabels.HTTP_METHOD_LABEL_KEY], 'GET');
+            assert.equal(labels[traceLabels.HTTP_PATH_LABEL_KEY], '/');
             assert.equal(labels[traceLabels.HTTP_URL_LABEL_KEY], 'http://localhost:9042/');
             assert(labels[traceLabels.HTTP_SOURCE_IP]);
             done();

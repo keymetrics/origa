@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This file has been modified by Keymetrics
+ */
+
 'use strict';
 
 var common = require('./common.js');
@@ -68,6 +73,7 @@ describe('test-trace-koa', function() {
           var expectedKeys = [
             TraceLabels.HTTP_METHOD_LABEL_KEY,
             TraceLabels.HTTP_URL_LABEL_KEY,
+            TraceLabels.HTTP_PATH_LABEL_KEY,
             TraceLabels.HTTP_SOURCE_IP,
             TraceLabels.HTTP_RESPONSE_CODE_LABEL_KEY
           ];
