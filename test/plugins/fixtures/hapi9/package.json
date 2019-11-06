@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "hapi": "^9.5.1"
+    "hapi": "^18.1.0"
   }
 }
