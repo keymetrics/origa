@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "mongoose": "^4.1.9"
+    "mongoose": "^5.7.8"
   }
 }
